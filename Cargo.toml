@@ -1,0 +1,40 @@
+[package]
+name = "mnml-msg-gmail"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+description = "Gmail browse + send for mnml — terminal TUI for inbox, sent, labels, search, and message composition. Uses Gmail API v1 (no SDK dep) with loopback OAuth like gcloud auth login."
+homepage = "https://mnml.sh"
+repository = "https://github.com/chris-mclennan/mnml-msg-gmail"
+readme = "README.md"
+authors = ["Chris McLennan"]
+
+[[bin]]
+name = "mnml-msg-gmail"
+path = "src/main.rs"
+
+[dependencies]
+ratatui = "0.29"
+crossterm = "0.28"
+reqwest = { version = "0.12", features = ["blocking", "json"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+clap = { version = "4", features = ["derive"] }
+anyhow = "1"
+chrono = { version = "0.4", features = ["serde"] }
+dirs = "5"
+webbrowser = "1"
+base64 = "0.22"
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+strip = true
+opt-level = "z"
+lto = true
+
+[profile.dist]
+inherits = "release"
+lto = "thin"
