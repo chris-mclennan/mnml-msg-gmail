@@ -75,6 +75,7 @@ fn run_check() -> Result<()> {
     let creds = auth::ClientCreds::from_env();
     let token_on_disk = auth::load_token().ok().flatten();
 
+    println!("{} v{}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
     println!("config: {}", config::config_path().display());
     match &cfg {
         Ok(cfg) => {
