@@ -182,14 +182,15 @@ fn print_setup_hint() {
 }
 
 fn mask_env(name: &str) -> String {
+    // 2026-06-08 sibling-sweep fix: was leaking the last 4 chars of
+    // the env value to stderr / stdout. Modern API keys (Gmail OAuth
+    // client secret etc.) are short enough that 4 chars is ~20% of
+    // the entropy — a real, if low-exposure, leak. Also fixes a
+    // latent panic: `&v[v.len()-4..]` indexes into the BYTE buffer,
+    // so a 2-byte-per-char tail like `é` could panic with a non-
+    // char-boundary slice. Just report the length.
     match std::env::var(name) {
-        Ok(v) if !v.is_empty() => {
-            if v.len() > 6 {
-                format!("set ({} chars, ends …{})", v.len(), &v[v.len() - 4..])
-            } else {
-                format!("set ({} chars)", v.len())
-            }
-        }
+        Ok(v) if !v.is_empty() => format!("set ({} chars)", v.len()),
         _ => "(unset)".into(),
     }
 }
